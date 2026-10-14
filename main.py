@@ -5,14 +5,15 @@
 # 4. Update birthdays.csv to contain today's month and day.
 # See the solution video in the 100 Days of Python Course for explainations.
 
-
+import os
 import datetime as dt
 import random
 import smtplib
 import pandas
 
-MY_EMAIL = "tutorielpython95@gmail.com"
-MY_PASSWORD = "dibtfuxddtcpdpet"
+MY_EMAIL = os.environ.get("MY_EMAIL")
+MY_PASSWORD = os.environ.get("MY_PASSWORD")
+
 
 now = dt.datetime.now()
 today_day = now.day
