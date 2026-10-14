@@ -6,33 +6,33 @@
 # See the solution video in the 100 Days of Python Course for explainations.
 
 
-from datetime import datetime
-import pandas
+import datetime as dt
 import random
 import smtplib
-import os
+import pandas
 
-# import os and use it to get the Github repository secrets
-MY_EMAIL = os.environ.get("MY_EMAIL")
-MY_PASSWORD = os.environ.get("MY_PASSWORD")
+MY_EMAIL = "tutorielpython95@gmail.com"
+MY_PASSWORD = "dibtfuxddtcpdpet"
 
-today = datetime.now()
-today_tuple = (today.month, today.day)
-
+now = dt.datetime.now()
+today_day = now.day
+today_month = now.month
+today = (today_month, today_day)
 data = pandas.read_csv("birthdays.csv")
-birthdays_dict = {(data_row["month"], data_row["day"])                  : data_row for (index, data_row) in data.iterrows()}
-if today_tuple in birthdays_dict:
-    birthday_person = birthdays_dict[today_tuple]
-    file_path = f"letter_templates/letter_{random.randint(1, 3)}.txt"
-    with open(file_path) as letter_file:
-        contents = letter_file.read()
-        contents = contents.replace("[NAME]", birthday_person["name"])
 
-    with smtplib.SMTP("YOUR EMAIL PROVIDER SMTP SERVER ADDRESS") as connection:
+birthday_dict = {(data_row["month"], data_row["day"]): data_row for (index, data_row) in data.iterrows()}
+
+
+if today in birthday_dict:
+    birthday_person = birthday_dict[today]
+    random_number = random.randint(1, 3)
+    with open(f"letter_templates/letter_{random_number}.txt") as letter:
+        content = letter.read()
+        content = content.replace("[NAME]", birthday_person["name"])
+
+    with smtplib.SMTP("smtp.gmail.com") as connection:
         connection.starttls()
         connection.login(MY_EMAIL, MY_PASSWORD)
-        connection.sendmail(
-            from_addr=MY_EMAIL,
-            to_addrs=birthday_person["email"],
-            msg=f"Subject:Happy Birthday!\n\n{contents}"
-        )
+        connection.sendmail(from_addr=MY_EMAIL,
+                            to_addrs=birthday_person["email"],
+                            msg=f"Subject:Happy Birthday!\n\n{content}")
